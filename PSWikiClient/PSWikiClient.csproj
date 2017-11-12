@@ -6,7 +6,7 @@
     <Version>0.1.0.0</Version>
     <Authors>CXuesong</Authors>
     <Company />
-    <Description>Access MediaWiki-base sites with PowerShell.</Description>
+    <Description>Access MediaWiki-based sites with PowerShell.</Description>
     <PackageProjectUrl>https://github.com/CXuesong/PSWikiClient</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/CXuesong/PSWikiClient/blob/master/LICENSE.txt</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/CXuesong/PSWikiClient</RepositoryUrl>

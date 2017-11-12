@@ -2,6 +2,12 @@
 
 Flavor [Wiki Client Library](https://github.com/CXuesong/WikiClientLibrary) with PowerShell. WIP.
 
+This WIP package is on PSGallery now. To install the module, run the following command in PowerShell
+
+```powershell
+Install-Module -Name PSWikiClient
+```
+
 ![Snapshoot1.png](Images/Snapshoot1.png)
 
 ```powershell
