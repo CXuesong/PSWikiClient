@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 using Newtonsoft.Json;
+using WikiClientLibrary.Pages;
 
 namespace PSWikiClient
 {
@@ -64,6 +65,20 @@ namespace PSWikiClient
             {
                 Marshal.ZeroFreeGlobalAllocUnicode(passwordPtr);
             }
+        }
+
+        public static AutoWatchBehavior ParseAutoWatchBehavior(string expr)
+        {
+            if (expr == null) return AutoWatchBehavior.Default;
+            if ("Watch".Equals(expr, StringComparison.OrdinalIgnoreCase))
+                return AutoWatchBehavior.Watch;
+            if ("Unwatch".Equals(expr, StringComparison.OrdinalIgnoreCase))
+                return AutoWatchBehavior.Unwatch;
+            if ("None".Equals(expr, StringComparison.OrdinalIgnoreCase))
+                return AutoWatchBehavior.None;
+            if ("Default".Equals(expr, StringComparison.OrdinalIgnoreCase))
+                return AutoWatchBehavior.Default;
+            throw new ArgumentException("Invalid AutoWatchBehavior value.", nameof(expr));
         }
 
     }
