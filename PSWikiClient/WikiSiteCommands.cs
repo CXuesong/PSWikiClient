@@ -11,7 +11,11 @@ using WikiClientLibrary.Sites;
 namespace PSWikiClient
 {
 
+    /// <summary>
+    /// Creates a new <see cref="WikiSite"/> instance.
+    /// </summary>
     [Cmdlet(VerbsCommon.New, NounsCommon.WikiSite)]
+    [OutputType(typeof(WikiSite))]
     public class NewWikiSiteCommand : AsyncCmdlet
     {
 
@@ -44,18 +48,7 @@ namespace PSWikiClient
             WikiSite site;
             if (UserName != null)
             {
-                var passwordPtr = IntPtr.Zero;
-                string unsafePassword;
-                try
-                {
-                    passwordPtr = Marshal.SecureStringToGlobalAllocUnicode(Password);
-                    unsafePassword = Marshal.PtrToStringUni(passwordPtr);
-                }
-                finally
-                {
-                    Marshal.ZeroFreeGlobalAllocUnicode(passwordPtr);
-                }
-                site = new WikiSite(WikiClient, new SiteOptions(ApiEndpoint), UserName, unsafePassword);
+                site = new WikiSite(WikiClient, new SiteOptions(ApiEndpoint), UserName, Utility.UnsafeSecureStringToString(Password));
             }
             else
             {
@@ -63,6 +56,52 @@ namespace PSWikiClient
             }
             await site.Initialization;
             WriteObject(site);
+        }
+    }
+
+    /// <summary>
+    /// Logins into <see cref="WikiSite"/>.
+    /// </summary>
+    [Cmdlet(VerbsCommon.Add, NounsCommon.WikiAccount)]
+    [Alias("Login-WikiAccount", "Login-WikiSite")]
+    public class AddWikiAccountCommand : AsyncCmdlet
+    {
+
+        [Parameter(Mandatory = true, Position = 0)]
+        [ValidateNotNull]
+        public WikiSite WikiSite { get; set; }
+
+        [Parameter(Mandatory = true, Position = 1)]
+        [ValidateNotNullOrEmpty]
+        public string UserName { get; set; }
+
+        [Parameter(Mandatory = true, Position = 2)]
+        [ValidateNotNullOrEmpty]
+        public SecureString Password { get; set; }
+
+        /// <inheritdoc />
+        protected override async Task ProcessRecordAsync(CancellationToken cancellationToken)
+        {
+            await WikiSite.LoginAsync(UserName, Utility.UnsafeSecureStringToString(Password));
+        }
+    }
+
+    /// <summary>
+    /// Logouts from <see cref="WikiSite"/>.
+    /// </summary>
+    [Cmdlet(VerbsCommon.Remove, NounsCommon.WikiAccount)]
+    [Alias("Logout-WikiAccount", "Logout-WikiSite")]
+    public class RemoveWikiAccountCommand : AsyncCmdlet
+    {
+
+        [Parameter(Mandatory = true, Position = 0)]
+        [ValidateNotNull]
+        public WikiSite WikiSite { get; set; }
+
+        /// <inheritdoc />
+        protected override async Task ProcessRecordAsync(CancellationToken cancellationToken)
+        {
+            await WikiSite.LogoutAsync();
         }
     }
 

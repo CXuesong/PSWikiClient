@@ -22,31 +22,18 @@ namespace PSWikiClient.Infrastructures
         /// <inheritdoc />
         protected sealed override void ProcessRecord()
         {
-            QueueSynchronizationContext syncContext = null;
-            if (SynchronizationContext.Current == null)
+            using (var syncContext = new QueueSynchronizationContext())
             {
-                SynchronizationContext.SetSynchronizationContext(syncContext = new QueueSynchronizationContext());
-            }
-            var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            try
-            {
-                var task = Task.Factory.StartNew(() => ProcessRecordAsync(cts.Token), cts.Token,
-                    TaskCreationOptions.None, scheduler);
-                if (syncContext == null)
+                SynchronizationContext.SetSynchronizationContext(syncContext);
+                try
                 {
-                    task.GetAwaiter().GetResult();
-                }
-                else
-                {
+                    var task = ProcessRecordAsync(cts.Token);
                     task.ContinueWith(t => cts.Cancel());
                     syncContext.Run(cts.Token);
+                    task.GetAwaiter().GetResult();
                 }
-            }
-            finally
-            {
-                if (syncContext != null)
+                finally
                 {
-                    syncContext.Dispose();
                     SynchronizationContext.SetSynchronizationContext(null);
                 }
             }
@@ -62,6 +49,7 @@ namespace PSWikiClient.Infrastructures
         protected override void EndProcessing()
         {
             cts.Dispose();
+            cts = null;
         }
 
         protected abstract Task ProcessRecordAsync(CancellationToken cancellationToken);

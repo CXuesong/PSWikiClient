@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
 using Newtonsoft.Json;
 
@@ -47,6 +49,20 @@ namespace PSWikiClient
             using (var jwriter = new JsonTextWriter(writer))
             {
                 JsonSerializer.Serialize(jwriter, value);
+            }
+        }
+
+        public static string UnsafeSecureStringToString(SecureString ss)
+        {
+            var passwordPtr = IntPtr.Zero;
+            try
+            {
+                passwordPtr = Marshal.SecureStringToGlobalAllocUnicode(ss);
+                return Marshal.PtrToStringUni(passwordPtr);
+            }
+            finally
+            {
+                Marshal.ZeroFreeGlobalAllocUnicode(passwordPtr);
             }
         }
 

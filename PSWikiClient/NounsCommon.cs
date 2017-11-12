@@ -11,6 +11,8 @@ namespace PSWikiClient
 
         public const string WikiSite = "WikiSite";
 
+        public const string WikiAccount = "WikiAccount";
+
         public const string WikiPage = "WikiPage";
 
     }
