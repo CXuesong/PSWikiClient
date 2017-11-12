@@ -19,11 +19,19 @@ namespace PSWikiClient
     public class NewWikiSiteCommand : AsyncCmdlet
     {
 
+        /// <summary>
+        /// The <see cref="WikiClient"/> on which to issue the requests.
+        /// </summary>
         [Parameter(Mandatory = true, Position = 0, ParameterSetName = "Default")]
         [Parameter(Mandatory = true, Position = 0, ParameterSetName = "WithLogin")]
         [ValidateNotNull]
         public WikiClient WikiClient { get; set; }
 
+        /// <summary>
+        /// API endpoint URL of the site.
+        /// </summary>
+        /// <remarks>To search for an API endpoint from an arbitary URL taken from a MediaWiki site,
+        /// use <see cref="SearchMediaWikiEndpointCommand"/>.</remarks>
         [Parameter(Mandatory = true, Position = 1, ValueFromPipeline = true)]
         public string ApiEndpoint { get; set; }
 
@@ -67,14 +75,23 @@ namespace PSWikiClient
     public class AddWikiAccountCommand : AsyncCmdlet
     {
 
+        /// <summary>
+        /// The site to be logged-in.
+        /// </summary>
         [Parameter(Mandatory = true, Position = 0)]
         [ValidateNotNull]
         public WikiSite WikiSite { get; set; }
 
+        /// <summary>
+        /// User name.
+        /// </summary>
         [Parameter(Mandatory = true, Position = 1)]
         [ValidateNotNullOrEmpty]
         public string UserName { get; set; }
 
+        /// <summary>
+        /// Password.
+        /// </summary>
         [Parameter(Mandatory = true, Position = 2)]
         [ValidateNotNullOrEmpty]
         public SecureString Password { get; set; }
@@ -94,6 +111,9 @@ namespace PSWikiClient
     public class RemoveWikiAccountCommand : AsyncCmdlet
     {
 
+        /// <summary>
+        /// The site to be logged-out.
+        /// </summary>
         [Parameter(Mandatory = true, Position = 0)]
         [ValidateNotNull]
         public WikiSite WikiSite { get; set; }
@@ -102,6 +122,37 @@ namespace PSWikiClient
         protected override async Task ProcessRecordAsync(CancellationToken cancellationToken)
         {
             await WikiSite.LogoutAsync();
+        }
+    }
+
+    /// <summary>
+    /// Searches the MediaWiki API endpoint URL starting with an arbitary given
+    /// URL from that site.
+    /// </summary>
+    [Cmdlet(VerbsCommon.Search, NounsCommon.MediaWikiEndpoint)]
+    [Alias("Search-MWEndpoint")]
+    public class SearchMediaWikiEndpointCommand : AsyncCmdlet
+    {
+
+        /// <summary>
+        /// The <see cref="WikiClient"/> on which to issue the requests.
+        /// </summary>
+        [Parameter(Mandatory = true, Position = 0)]
+        [ValidateNotNull]
+        public WikiClient WikiClient { get; set; }
+
+        /// <summary>
+        /// The URL from which to test and search for MediaWiki API endpoint.
+        /// </summary>
+        [Parameter(Mandatory = true, Position = 1, ValueFromPipeline = true)]
+        [ValidateNotNullOrEmpty]
+        public string StartupPath { get; set; }
+
+        /// <inheritdoc />
+        protected override async Task ProcessRecordAsync(CancellationToken cancellationToken)
+        {
+            var result = await WikiSite.SearchApiEndpointAsync(WikiClient, StartupPath);
+            WriteObject(result);
         }
     }
 
