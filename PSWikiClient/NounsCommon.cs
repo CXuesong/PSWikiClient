@@ -15,8 +15,9 @@ namespace PSWikiClient
 
         public const string WikiPage = "WikiPage";
 
-        public const string MediaWikiEndpoint = "MediaWikiEndpoint";
+        public const string WikiFile = "WikiFile";
 
+        public const string MediaWikiEndpoint = "MediaWikiEndpoint";
 
     }
 }

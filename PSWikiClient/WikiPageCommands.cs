@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Management.Automation;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using PSWikiClient.Infrastructures;
+using WikiClientLibrary.Infrastructures;
 using WikiClientLibrary.Pages;
+using WikiClientLibrary.Pages.Queries;
+using WikiClientLibrary.Pages.Queries.Properties;
 using WikiClientLibrary.Sites;
 
 namespace PSWikiClient
@@ -29,19 +33,38 @@ namespace PSWikiClient
         /// <inheritdoc />
         protected override void ProcessRecord()
         {
-            var page = WikiPage.FromTitle(WikiSite, Title);
+            var page = new WikiPage(WikiSite, Title);
             WriteObject(page);
         }
     }
 
-    [Cmdlet(VerbsCommunications.Read, NounsCommon.WikiPage)]
-    [Alias("Refresh-WikiPage")]
+    /// <summary>
+    /// Gets the information and/or content of a sequence of <see cref="WikiPage"/>.
+    /// </summary>
+    [Cmdlet(VerbsCommon.Get, NounsCommon.WikiPage)]
     public class ReadWikiPageCommand : AsyncCmdlet
     {
 
-        [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
+        [Parameter(Mandatory = true, Position = 0, ParameterSetName = "Title")]
+        [Parameter(Mandatory = true, Position = 0, ParameterSetName = "Titles")]
+        [ValidateNotNull]
+        public WikiSite WikiSite { get; set; }
+
+        [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ParameterSetName = "Pages")]
         [ValidateNotNullOrEmpty]
         public WikiPage[] Pages { get; set; }
+
+        [Parameter(Mandatory = true, Position = 1, ValueFromPipeline = true, ParameterSetName = "Titles")]
+        [ValidateNotNullOrEmpty]
+        public string[] Titles { get; set; }
+
+        [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ParameterSetName = "Page")]
+        [ValidateNotNullOrEmpty]
+        public WikiPage Page { get; set; }
+
+        [Parameter(Mandatory = true, Position = 1, ValueFromPipeline = true, ParameterSetName = "Title")]
+        [ValidateNotNullOrEmpty]
+        public string Title { get; set; }
 
         [Parameter]
         public SwitchParameter Content { get; set; }
@@ -55,20 +78,49 @@ namespace PSWikiClient
         [Parameter]
         public SwitchParameter GeoCoordinate { get; set; }
 
-        /// <inheritdoc />
-        protected override Task ProcessRecordAsync(CancellationToken cancellationToken)
+        private WikiPage[] GetPages()
         {
+            if (Pages != null) return Pages;
+            if (Page != null) return new[] {Page};
+            if (Titles != null) return Titles.Select(t => new WikiPage(WikiSite, t)).ToArray();
+            if (Title != null) return new[] {new WikiPage(WikiSite, Title)};
+            throw new InvalidOperationException();
+        }
+
+        /// <inheritdoc />
+        protected override async Task ProcessRecordAsync(CancellationToken cancellationToken)
+        {
+            var pages = GetPages();
             var options = PageQueryOptions.None;
             if (Content) options |= PageQueryOptions.FetchContent;
             if (ResolveRedirects) options |= PageQueryOptions.ResolveRedirects;
-            if (Extract) options |= PageQueryOptions.FetchExtract;
-            if (GeoCoordinate) options |= PageQueryOptions.FetchGeoCoordinate;
-            return Pages.RefreshAsync(options, cancellationToken);
+            var provider = MediaWikiHelper.QueryProviderFromOptions(options);
+            if (Extract | GeoCoordinate)
+            {
+                var provider1 = WikiPageQueryProvider.FromOptions(options);
+                if (Extract)
+                {
+                    provider1.Properties.Add(new ExtractsPropertyProvider
+                    {
+                        AsPlainText = true,
+                        IntroductionOnly = true,
+                        MaxSentences = 1,
+                    });
+                }
+                if (GeoCoordinate)
+                {
+                    provider1.Properties.Add(new GeoCoordinatesPropertyProvider());
+                }
+                provider = provider1;
+            }
+            await pages.RefreshAsync(provider, cancellationToken);
+            if (Pages != null || Titles != null)
+                WriteObject(pages);
+            WriteObject(pages[0]);
         }
     }
 
-    [Cmdlet(VerbsCommunications.Write, NounsCommon.WikiPage)]
-    [Alias("Update-WikiPage")]
+    [Cmdlet(VerbsData.Publish, NounsCommon.WikiPage + "Content")]
     public class WriteWikiPageCommand : AsyncCmdlet
     {
 
@@ -149,7 +201,6 @@ namespace PSWikiClient
     }
 
     [Cmdlet(VerbsCommon.Remove, NounsCommon.WikiPage)]
-    [Alias("Delete-WikiPage")]
     public class DeleteWikiPageCommand : AsyncCmdlet
     {
 
