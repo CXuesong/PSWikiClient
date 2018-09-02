@@ -28,9 +28,12 @@ namespace PSWikiClient.Infrastructures
                 try
                 {
                     var task = ProcessRecordAsync(cts.Token);
-                    task.ContinueWith(t => cts.Cancel());
-                    syncContext.Run(cts.Token);
-                    task.GetAwaiter().GetResult();
+                    using (var syncCts = new CancellationTokenSource())
+                    {
+                        task.ContinueWith(t => syncCts.Cancel(), syncCts.Token);
+                        syncContext.Run(syncCts.Token);
+                        task.GetAwaiter().GetResult();
+                    }
                 }
                 finally
                 {
