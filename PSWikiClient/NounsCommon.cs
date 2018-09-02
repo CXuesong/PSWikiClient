@@ -16,8 +16,21 @@ namespace PSWikiClient
         public const string WikiPage = "WikiPage";
 
         public const string WikiFile = "WikiFile";
-
+        
         public const string MediaWikiEndpoint = "MediaWikiEndpoint";
+
+    }
+
+    public static class NounsWikibase
+    {
+
+        public const string Entity = "Entity";
+        public const string Item = "Item";
+        public const string Property = "Property";
+        public const string Claim = "Claim";
+        public const string Claims = "Claims";
+        public const string Label = "Label";
+        public const string Alias = "Alias";
 
     }
 }

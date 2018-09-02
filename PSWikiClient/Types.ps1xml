@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Types>
+  <Type>
+    <Name>WikiClientLibrary.Wikibase.DataTypes.WbMonolingualText</Name>
+    <Members></Members>
+    <TypeConverter>
+      <TypeName>PSWikiClient.Wikibase.WbMonolingualTextConverter</TypeName>
+    </TypeConverter>
+  </Type>
+</Types>

@@ -81,5 +81,17 @@ namespace PSWikiClient
             throw new ArgumentException("Invalid AutoWatchBehavior value.", nameof(expr));
         }
 
+        public static void AddRange<T>(this ICollection<T> source, IEnumerable<T> items)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (items == null) throw new ArgumentNullException(nameof(items));
+            if (source is List<T> l)
+            {
+                l.AddRange(items);
+                return;
+            }
+            foreach (var i in items) source.Add(i);
+        }
+
     }
 }

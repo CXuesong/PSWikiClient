@@ -15,6 +15,7 @@ namespace PSWikiClient
     /// Instantiates a new <see cref="WikiClient"/> instance.
     /// </summary>
     [Cmdlet(VerbsCommon.New, NounsCommon.WikiClient)]
+    [OutputType(typeof(WikiClient))]
     public class NewWikiClientCommand : Cmdlet
     {
 
@@ -37,7 +38,8 @@ namespace PSWikiClient
         {
             var client = new WikiClient
             {
-                ClientUserAgent = "PSWikiClient/0.1 (https://github.com/CXuesong/PSWikiClient)"
+                ClientUserAgent = "PSWikiClient/0.1 (https://github.com/CXuesong/PSWikiClient)",
+                Timeout = TimeSpan.FromMinutes(1),
             };
             WikiClientStateHolder state = null;
             if (StateContent != null)
