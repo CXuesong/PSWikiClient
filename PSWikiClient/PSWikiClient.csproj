@@ -19,8 +19,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CXuesong.MW.WikiClientLibrary" Version="0.6.0-intX4" />
-    <PackageReference Include="CXuesong.MW.WikiClientLibrary.Wikibase" Version="0.6.0-intX4" />
+    <PackageReference Include="CXuesong.MW.WikiClientLibrary" Version="0.6.4" />
+    <PackageReference Include="CXuesong.MW.WikiClientLibrary.Wikibase" Version="0.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="PowerShellStandard.Library" Version="3.0.0-preview-01" />
   </ItemGroup>
