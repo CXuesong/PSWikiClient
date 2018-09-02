@@ -19,6 +19,7 @@ namespace PSWikiClient
     /// Creates a new <see cref="WikiPage"/> instance.
     /// </summary>
     [Cmdlet(VerbsCommon.New, NounsCommon.WikiPage)]
+    [OutputType(typeof(WikiPage))]
     public class NewWikiPageCommand : Cmdlet
     {
 
@@ -42,10 +43,10 @@ namespace PSWikiClient
     /// Gets the information and/or content of a sequence of <see cref="WikiPage"/>.
     /// </summary>
     [Cmdlet(VerbsCommon.Get, NounsCommon.WikiPage)]
-    public class ReadWikiPageCommand : AsyncCmdlet
+    [OutputType(typeof(WikiPage))]
+    public class GetWikiPageCommand : AsyncCmdlet
     {
 
-        [Parameter(Mandatory = true, Position = 0, ParameterSetName = "Title")]
         [Parameter(Mandatory = true, Position = 0, ParameterSetName = "Titles")]
         [ValidateNotNull]
         public WikiSite WikiSite { get; set; }
@@ -57,14 +58,6 @@ namespace PSWikiClient
         [Parameter(Mandatory = true, Position = 1, ValueFromPipeline = true, ParameterSetName = "Titles")]
         [ValidateNotNullOrEmpty]
         public string[] Titles { get; set; }
-
-        [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ParameterSetName = "Page")]
-        [ValidateNotNullOrEmpty]
-        public WikiPage Page { get; set; }
-
-        [Parameter(Mandatory = true, Position = 1, ValueFromPipeline = true, ParameterSetName = "Title")]
-        [ValidateNotNullOrEmpty]
-        public string Title { get; set; }
 
         [Parameter]
         public SwitchParameter Content { get; set; }
@@ -81,9 +74,7 @@ namespace PSWikiClient
         private WikiPage[] GetPages()
         {
             if (Pages != null) return Pages;
-            if (Page != null) return new[] {Page};
             if (Titles != null) return Titles.Select(t => new WikiPage(WikiSite, t)).ToArray();
-            if (Title != null) return new[] {new WikiPage(WikiSite, Title)};
             throw new InvalidOperationException();
         }
 
@@ -114,13 +105,12 @@ namespace PSWikiClient
                 provider = provider1;
             }
             await pages.RefreshAsync(provider, cancellationToken);
-            if (Pages != null || Titles != null)
-                WriteObject(pages);
-            WriteObject(pages[0]);
+            WriteObject(pages, true);
         }
     }
 
-    [Cmdlet(VerbsData.Publish, NounsCommon.WikiPage + "Content")]
+    [Cmdlet(VerbsData.Publish, NounsCommon.WikiPage + "Content", SupportsShouldProcess = true)]
+    [OutputType(typeof(bool))]
     public class WriteWikiPageCommand : AsyncCmdlet
     {
 
@@ -146,6 +136,11 @@ namespace PSWikiClient
         /// <inheritdoc />
         protected override async Task ProcessRecordAsync(CancellationToken cancellationToken)
         {
+            if (!ShouldProcess(Page.ToString()))
+            {
+                WriteObject(false);
+                return;
+            }
             var result = await Page.UpdateContentAsync(Summary, Minor, Bot,
                 Utility.ParseAutoWatchBehavior(Watch), cancellationToken);
             WriteObject(result);
@@ -153,7 +148,8 @@ namespace PSWikiClient
 
     }
 
-    [Cmdlet(VerbsCommon.Move, NounsCommon.WikiPage)]
+    [Cmdlet(VerbsCommon.Move, NounsCommon.WikiPage, SupportsShouldProcess = true)]
+    [OutputType(typeof(void))]
     public class MoveWikiPageCommand : AsyncCmdlet
     {
 
@@ -194,13 +190,15 @@ namespace PSWikiClient
             if (Recurse) options |= PageMovingOptions.MoveSubpages;
             if (LeaveTalk) options |= PageMovingOptions.LeaveTalk;
             if (NoRedirect) options |= PageMovingOptions.NoRedirect;
+            if (!ShouldProcess(Page.ToString())) return Task.CompletedTask;
             return Page.MoveAsync(NewTitle, Reason, options,
                 Utility.ParseAutoWatchBehavior(Watch), cancellationToken);
         }
 
     }
 
-    [Cmdlet(VerbsCommon.Remove, NounsCommon.WikiPage)]
+    [Cmdlet(VerbsCommon.Remove, NounsCommon.WikiPage, SupportsShouldProcess = true)]
+    [OutputType(typeof(void))]
     public class DeleteWikiPageCommand : AsyncCmdlet
     {
 
@@ -220,6 +218,7 @@ namespace PSWikiClient
         /// <inheritdoc />
         protected override Task ProcessRecordAsync(CancellationToken cancellationToken)
         {
+            if (!ShouldProcess(Page.ToString())) return Task.CompletedTask;
             return Page.DeleteAsync(Reason, Utility.ParseAutoWatchBehavior(Watch), cancellationToken);
         }
 
