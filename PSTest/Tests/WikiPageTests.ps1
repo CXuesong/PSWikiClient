@@ -13,24 +13,30 @@ Context "Shared WikiSite" {
         }
     }
 
-    Describe "Read-WikiPage" {
+    Describe "Get-WikiPage" {
         It "Works" {
             $pages = @("Project:Sandbox", "Main Page", "Non-existent page") | %{New-WikiPage $site $_}
-            Refresh-WikiPage $pages
+            Get-WikiPage $pages
             $pages[0].Exists | Should -Be $true
             $pages[1].Exists | Should -Be $true
             $pages[2].Exists | Should -Be $false
         }
     }
 
-    Describe "Write-WikiPage" {
+    Describe "Publish-WikiPage" {
         It "Works" {
             $page = New-WikiPage $site Project:Sandbox
-            Refresh-WikiPage $page -Content
+            Get-WikiPage $page -Content
             $page.Content += "\n\nTest edit."
-            Update-WikiPage $page -Summary:"Test edit from PSWikiClient." -Bot -Minor
+            Publish-WikiPage $page -Summary:"Test edit from PSWikiClient." -Bot -Minor
         }
     }
 
-    Logout-WikiSite $site
+    Describe "Publish-WikiFile" {
+        It "Works" {
+            $result = Publish-WikiFile .\TestFiles\1.jpg $site UploadTest.jpg -Chunked
+        }
+    }
+
+    Remove-WikiAccount $site
 }

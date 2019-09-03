@@ -1,7 +1,6 @@
 ﻿using PSWikiClient.Infrastructures;
 using System;
 using System.Management.Automation;
-using System.Runtime.InteropServices;
 using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
@@ -70,9 +69,8 @@ namespace PSWikiClient
     /// <summary>
     /// Logins into <see cref="WikiSite"/>.
     /// </summary>
-    [Cmdlet(VerbsCommon.Add, NounsCommon.WikiAccount)]
-    [Alias("Login-WikiAccount", "Login-WikiSite")]
-    public class AddWikiAccountCommand : AsyncCmdlet
+    [Cmdlet(VerbsCommon.Set, NounsCommon.WikiAccount)]
+    public class SetWikiAccountCommand : AsyncCmdlet
     {
 
         /// <summary>
@@ -107,7 +105,6 @@ namespace PSWikiClient
     /// Logouts from <see cref="WikiSite"/>.
     /// </summary>
     [Cmdlet(VerbsCommon.Remove, NounsCommon.WikiAccount)]
-    [Alias("Logout-WikiAccount", "Logout-WikiSite")]
     public class RemoveWikiAccountCommand : AsyncCmdlet
     {
 
@@ -126,11 +123,10 @@ namespace PSWikiClient
     }
 
     /// <summary>
-    /// Searches the MediaWiki API endpoint URL starting with an arbitary given
+    /// Searches the MediaWiki API endpoint URL starting with an arbitrary given
     /// URL from that site.
     /// </summary>
     [Cmdlet(VerbsCommon.Search, NounsCommon.MediaWikiEndpoint)]
-    [Alias("Search-MWEndpoint")]
     public class SearchMediaWikiEndpointCommand : AsyncCmdlet
     {
 

@@ -23,7 +23,7 @@ Context "Shared WikiClient" {
             Write-Verbose -Verbose $site.AccountInfo
             $site.AccountInfo.IsUser | Should -Be $true
             $site.AccountInfo.IsAnonymous | Should -Be $false
-            Logout-WikiSite $site
+            Remove-WikiAccount $site
         }
     }
 }

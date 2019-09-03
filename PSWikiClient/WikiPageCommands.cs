@@ -109,9 +109,9 @@ namespace PSWikiClient
         }
     }
 
-    [Cmdlet(VerbsData.Publish, NounsCommon.WikiPage + "Content", SupportsShouldProcess = true)]
+    [Cmdlet(VerbsData.Publish, NounsCommon.WikiPage, SupportsShouldProcess = true)]
     [OutputType(typeof(bool))]
-    public class WriteWikiPageCommand : AsyncCmdlet
+    public class PublishWikiPageCommand : AsyncCmdlet
     {
 
         [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true)]
