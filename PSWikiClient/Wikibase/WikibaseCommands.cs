@@ -387,8 +387,8 @@ namespace PSWikiClient.Wikibase
         public string[] Property { get; set; }
 
         /// <summary>
-        /// Specifies the source property IDs whose entity reference values
-        /// can be replaced with missing references.
+        /// <para type="description">Specifies the source property IDs whose entity reference values
+        /// can be replaced with missing references.</para>
         /// </summary>
         [Parameter]
         public string[] OptionalProperty { get; set; }

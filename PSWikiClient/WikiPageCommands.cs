@@ -16,7 +16,7 @@ namespace PSWikiClient
 {
 
     /// <summary>
-    /// Creates a new <see cref="WikiPage"/> instance.
+    /// <para type="description">Creates a new <see cref="WikiPage"/> instance.</para>
     /// </summary>
     [Cmdlet(VerbsCommon.New, NounsCommon.WikiPage)]
     [OutputType(typeof(WikiPage))]
@@ -40,7 +40,7 @@ namespace PSWikiClient
     }
 
     /// <summary>
-    /// Gets the information and/or content of a sequence of <see cref="WikiPage"/>.
+    /// <para type="description">Gets the information and/or content of a sequence of <see cref="WikiPage"/>.</para>
     /// </summary>
     [Cmdlet(VerbsCommon.Get, NounsCommon.WikiPage)]
     [OutputType(typeof(WikiPage))]

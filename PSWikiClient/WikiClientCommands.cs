@@ -12,7 +12,7 @@ namespace PSWikiClient
 {
 
     /// <summary>
-    /// Instantiates a new <see cref="WikiClient"/> instance.
+    /// <para type="description">Instantiates a new <see cref="WikiClient"/> instance.</para>
     /// </summary>
     [Cmdlet(VerbsCommon.New, NounsCommon.WikiClient)]
     [OutputType(typeof(WikiClient))]
@@ -20,14 +20,14 @@ namespace PSWikiClient
     {
 
         /// <summary>
-        /// Load state content from string as persisted by <see cref="SaveWikiClientCommand"/>.
+        /// <para type="description">Load state content from string as persisted by <see cref="SaveWikiClientCommand"/>.</para>
         /// </summary>
         [Parameter(ValueFromPipeline = true, Mandatory = true, ParameterSetName = "FromState")]
         [ValidateNotNullOrEmpty]
         public string StateContent { get; set; }
 
         /// <summary>
-        /// Load state content from file as persisted by <see cref="SaveWikiClientCommand"/>.
+        /// <para type="description">Load state content from file as persisted by <see cref="SaveWikiClientCommand"/>.</para>
         /// </summary>
         [Parameter(ParameterSetName = "FromStateFile")]
         [ValidateNotNullOrEmpty]
@@ -55,20 +55,20 @@ namespace PSWikiClient
     }
 
     /// <summary>
-    /// Persists the state content of <see cref="WikiClient"/>.
+    /// <para type="description">Persists the state content of <see cref="WikiClient"/>.</para>
     /// </summary>
     [Cmdlet(VerbsData.Save, NounsCommon.WikiClient)]
     public class SaveWikiClientCommand : Cmdlet
     {
         /// <summary>
-        /// The client instance to be persisted.
+        /// <para type="description">The client instance to be persisted.</para>
         /// </summary>
         [Parameter(Position = 0, Mandatory = true, ValueFromPipeline = true)]
         [ValidateNotNull]
         public WikiClient WikiClient { get; set; }
 
         /// <summary>
-        /// The path of the persisted state file.
+        /// <para type="description">The path of the persisted state file.</para>
         /// </summary>
         [Parameter(Position = 1)]
         public string StateFile { get; set; }

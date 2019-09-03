@@ -29,14 +29,14 @@ namespace PSWikiClient
         public FileInfo File { get; set; }
 
         /// <summary>
-        /// The site where to upload the new file.
+        /// <para type="description">The site where to upload the new file.</para>
         /// </summary>
         [Parameter(Mandatory = true, Position = 1)]
         [ValidateNotNull]
         public WikiSite WikiSite { get; set; }
         
         /// <summary>
-        /// The title where to upload the new file.
+        /// <para type="description">The title where to upload the new file.</para>
         /// </summary>
         [Parameter(Mandatory = true, Position = 2)]
         [ValidateNotNullOrEmpty]
@@ -48,13 +48,13 @@ namespace PSWikiClient
         public string Comment { get; set; }
 
         /// <summary>
-        /// Upload file by 500KB chunks.
+        /// <para type="description">Upload file by 500KB chunks.</para>
         /// </summary>
         [Parameter]
         public SwitchParameter Chunked { get; set; }
 
         /// <summary>
-        /// Ignore upload warnings.
+        /// <para type="description">Ignore upload warnings.</para>
         /// </summary>
         [Parameter]
         public SwitchParameter Force { get; set; }

@@ -11,7 +11,7 @@ namespace PSWikiClient
 {
 
     /// <summary>
-    /// Creates a new <see cref="WikiSite"/> instance.
+    /// <para type="description">Creates a new <see cref="WikiSite"/> instance.</para>
     /// </summary>
     [Cmdlet(VerbsCommon.New, NounsCommon.WikiSite)]
     [OutputType(typeof(WikiSite))]
@@ -19,7 +19,7 @@ namespace PSWikiClient
     {
 
         /// <summary>
-        /// The <see cref="WikiClient"/> on which to issue the requests.
+        /// <para type="description">The <see cref="WikiClient"/> on which to issue the requests.</para>
         /// </summary>
         [Parameter(Mandatory = true, Position = 0, ParameterSetName = "Default")]
         [Parameter(Mandatory = true, Position = 0, ParameterSetName = "WithLogin")]
@@ -27,10 +27,10 @@ namespace PSWikiClient
         public WikiClient WikiClient { get; set; }
 
         /// <summary>
-        /// API endpoint URL of the site.
+        /// <para type="description">API endpoint URL of the site.</para>
         /// </summary>
         /// <remarks>To search for an API endpoint from an arbitary URL taken from a MediaWiki site,
-        /// use <see cref="SearchMediaWikiEndpointCommand"/>.</remarks>
+        /// <para type="description">use <see cref="SearchMediaWikiEndpointCommand"/>.</remarks></para>
         [Parameter(Mandatory = true, Position = 1, ValueFromPipeline = true)]
         public string ApiEndpoint { get; set; }
 
@@ -67,28 +67,28 @@ namespace PSWikiClient
     }
 
     /// <summary>
-    /// Logins into <see cref="WikiSite"/>.
+    /// <para type="description">Logins into <see cref="WikiSite"/>.</para>
     /// </summary>
     [Cmdlet(VerbsCommon.Set, NounsCommon.WikiAccount)]
     public class SetWikiAccountCommand : AsyncCmdlet
     {
 
         /// <summary>
-        /// The site to be logged-in.
+        /// <para type="description">The site to be logged-in.</para>
         /// </summary>
         [Parameter(Mandatory = true, Position = 0)]
         [ValidateNotNull]
         public WikiSite WikiSite { get; set; }
 
         /// <summary>
-        /// User name.
+        /// <para type="description">User name.</para>
         /// </summary>
         [Parameter(Mandatory = true, Position = 1)]
         [ValidateNotNullOrEmpty]
         public string UserName { get; set; }
 
         /// <summary>
-        /// Password.
+        /// <para type="description">Password.</para>
         /// </summary>
         [Parameter(Mandatory = true, Position = 2)]
         [ValidateNotNullOrEmpty]
@@ -102,14 +102,14 @@ namespace PSWikiClient
     }
 
     /// <summary>
-    /// Logouts from <see cref="WikiSite"/>.
+    /// <para type="description">Logouts from <see cref="WikiSite"/>.</para>
     /// </summary>
     [Cmdlet(VerbsCommon.Remove, NounsCommon.WikiAccount)]
     public class RemoveWikiAccountCommand : AsyncCmdlet
     {
 
         /// <summary>
-        /// The site to be logged-out.
+        /// <para type="description">The site to be logged-out.</para>
         /// </summary>
         [Parameter(Mandatory = true, Position = 0)]
         [ValidateNotNull]
@@ -123,22 +123,22 @@ namespace PSWikiClient
     }
 
     /// <summary>
-    /// Searches the MediaWiki API endpoint URL starting with an arbitrary given
-    /// URL from that site.
+    /// <para type="description">Searches the MediaWiki API endpoint URL starting with an arbitrary given</para>
+    /// <para type="description">URL from that site.</para>
     /// </summary>
     [Cmdlet(VerbsCommon.Search, NounsCommon.MediaWikiEndpoint)]
     public class SearchMediaWikiEndpointCommand : AsyncCmdlet
     {
 
         /// <summary>
-        /// The <see cref="WikiClient"/> on which to issue the requests.
+        /// <para type="description">The <see cref="WikiClient"/> on which to issue the requests.</para>
         /// </summary>
         [Parameter(Mandatory = true, Position = 0)]
         [ValidateNotNull]
         public WikiClient WikiClient { get; set; }
 
         /// <summary>
-        /// The URL from which to test and search for MediaWiki API endpoint.
+        /// <para type="description">The URL from which to test and search for MediaWiki API endpoint.</para>
         /// </summary>
         [Parameter(Mandatory = true, Position = 1, ValueFromPipeline = true)]
         [ValidateNotNullOrEmpty]
