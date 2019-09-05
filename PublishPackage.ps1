@@ -3,6 +3,9 @@ $OutputDir = Join-Path $ProjectDir "bin/Release/netstandard2.0"
 $RedistDir = Join-Path $ProjectDir "bin/Redist/PSWikiClient"
 
 dotnet build -c RELEASE $ProjectDir
+if ($LASTEXITCODE) {
+    Exit $LASTEXITCODE
+}
 
 $RepositoryName = (Read-Host "Repository")
 $ApiKey = (Read-Host "NuGet API Key")
