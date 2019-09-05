@@ -12,10 +12,10 @@ class TestConfig {
     [scriptblock] $Login
 }
 
-if ($Force -or $Global:testConfig -eq $null)
+if ($Force -or -not $Global:testConfig)
 {
     $Global:testConfig = [TestConfig]@{
-        ModulePath = Join-Path $PSScriptRoot "../PSWikiClient/bin/Debug/netstandard2.0/PSWikiClient.dll" -Resolve
+        ModulePath = Join-Path $PSScriptRoot "../PSWikiClient/bin/Debug/netstandard2.0/PSWikiClient.psd1" -Resolve
         LoginScriptPath = Join-Path $PSScriptRoot "_private/Login.ps1" -Resolve
         IsDebug = $true
 
